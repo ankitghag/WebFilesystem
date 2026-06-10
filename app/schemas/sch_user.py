@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from app.models.app_model import UserRole
@@ -7,14 +7,12 @@ from app.models.app_model import UserRole
 class UserBase(BaseModel):
     """Base User Schema with common attributes"""
     email: EmailStr
-    role: Optional[str] = "USER"
+    role: Optional[str]
     username: Optional[str] = Field(None, min_length=2, max_length=50, description="First name of the user")
 
 class UserCreate(UserBase):
     """Schema for creating a new user"""
-    email: EmailStr
     password: str = Field(..., min_length=8)
-    role: Optional[str] = UserRole.USER.value
 
     @validator('password')
     def password_strength(cls, v):
@@ -76,3 +74,12 @@ class NodeContext(BaseModel):
 class ChgPermission(BaseModel):
     nid: int
     perm: int
+
+class CreateGrp(BaseModel):
+    grpname: str
+    grpuserids: List[int]
+    grpdesc: str
+
+class CompleteUpload(BaseModel):
+    file_id: int
+    content_type: str

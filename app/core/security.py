@@ -32,9 +32,34 @@ def create_access_token(
     to_encode.update({
         "exp": expire,
         "aud": setting.JWT_AUDIENCE,
-        "iss": setting.JWT_ISSUER
+        "iss": setting.JWT_ISSUER,
+        "type":"access"
     })
 
+    return jwt.encode(to_encode, setting.SECRET_KEY, algorithm=setting.ALGORITHM)
+
+def create_refresh_token(
+    data: dict, expires_delta: Optional[timedelta] = None
+) -> str:
+    """
+    Create access JWT token - placeholder implementation
+    """
+    to_encode = data.copy()
+
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        # Default expiration time
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=setting.REFRESH_TOKEN_EXPIRE_MINUTES
+        )
+    
+    to_encode.update({
+        "exp": expire,
+        "aud": setting.JWT_AUDIENCE,
+        "iss": setting.JWT_ISSUER,
+        "type": "refresh"
+    })
     return jwt.encode(to_encode, setting.SECRET_KEY, algorithm=setting.ALGORITHM)
 
 def verify_token(token: str):
@@ -46,6 +71,7 @@ def verify_token(token: str):
             audience=setting.JWT_AUDIENCE,
             issuer=setting.JWT_ISSUER
         )            
+        print(payload)
         return payload
     except JWTError as err:
         print(f"JWT ERROR : {err}")

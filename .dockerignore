@@ -1,0 +1,12 @@
+venv/          # folder
+__pycache__/   # folder
+*.pyc          # files
+.env           # specific file
+.git
+.gitignore
+test_con.py
+__pycache__
+wfs_ws.code-workspace
+gitsshkey
+gitsshkey.pub
+

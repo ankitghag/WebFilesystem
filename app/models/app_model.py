@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, func, Enum, TIMESTAMP, text, BigInteger, ForeignKey, UniqueConstraint
+from sqlalchemy import Boolean, Column, DateTime,SmallInteger,Integer, String, func, Enum, TIMESTAMP, text, BigInteger, ForeignKey, UniqueConstraint, Text
 from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
@@ -16,7 +16,7 @@ class User(Base):
     __tablename__ = "users"
     __table_args__ = {"schema": "filesys"}
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
     role: Mapped[str]=mapped_column(String(10))
     email: Mapped[str] = mapped_column(String(30), unique=True)
@@ -79,7 +79,16 @@ class FSNode(Base):
         nullable=False,
         default=0  # other default 0
     )
-
+    group_id: Mapped[int | None] = mapped_column(
+        Integer,
+        ForeignKey("filesys.groups.id", name="fk_fs_node_group"),
+        nullable=True
+    )
+    status: Mapped[int] = mapped_column(
+        String(30),
+        nullable=False,
+        default="UPLOADING"  # Status default 0
+    )
 
 class UserGroup(Base):
     __tablename__ = "user_groups"
@@ -97,4 +106,75 @@ class UserGroup(Base):
         ForeignKey("filesys.groups.id", ondelete="CASCADE"),
         primary_key=True,
         nullable=False
+    )
+
+class Group(Base):
+    __tablename__ = "groups"
+    __table_args__ = {"schema": "filesys"}
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+        unique=True
+    )
+
+    description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True
+    )
+
+    created_at: Mapped[str] = mapped_column(
+        TIMESTAMP,
+        nullable=False,
+        server_default=func.now()
+    )
+
+    updated_at: Mapped[str] = mapped_column(
+        TIMESTAMP,
+        nullable=False,
+        server_default=func.now()
+    )
+
+
+class RefreshToken(Base):
+    __tablename__ = "refresh_tokens"
+    __table_args__ = {"schema": "filesys"}
+
+    id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
+        autoincrement=True
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("filesys.users.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    token: Mapped[str] = mapped_column(
+        Text,
+        nullable=False,
+        unique=True
+    )
+
+    is_revoked: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False
+    )
+
+    expires_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP,
+        nullable=False
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP,
+        server_default=func.now()
     )

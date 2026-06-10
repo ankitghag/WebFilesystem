@@ -20,6 +20,10 @@ class UnauthorizedError(BaseCustomError):
         self.headers = headers or {}
         super().__init__(detail=detail, status_code=status.HTTP_401_UNAUTHORIZED, error_code=error_code)
 
+class InvalidRole(BaseCustomError):
+    def __init__(self,  detail: str= "Invalid User Role", error_code: str= "INVALID_ROLE"):
+        super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
+
 class InvalidJwtToken(BaseCustomError):
     def __init__(self,  detail: str= "Invalid jwt token", error_code: str= "INVALID TOKEN"):
         super().__init__(detail=detail, status_code=status.HTTP_401_UNAUTHORIZED, error_code=error_code)
@@ -36,6 +40,10 @@ class DirHasChild(BaseCustomError):
     def __init__(self,  detail: str= "Directory is not empty", error_code: str= "NON_EMPTY_DIR"):
         super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
 
+class UserNotExsits(BaseCustomError):
+    def __init__(self,  detail: str= "User doesn't exsist", error_code: str= "USER_NOT_EXSITS"):
+        super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
+
 class NodeNotExsits(BaseCustomError):
     def __init__(self,  detail: str= "Node doesn't exsist", error_code: str= "NODE_NOT_EXSITS"):
         super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
@@ -43,7 +51,14 @@ class NodeNotExsits(BaseCustomError):
 class NotaOwner(BaseCustomError):
     def __init__(self,  detail: str= "User is not owner of a node", error_code: str= "NOT_OWNER"):
         super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
+class NotanAdmin(BaseCustomError):
+    def __init__(self,  detail: str= "User is not an Admin", error_code: str= "NOT_ADMIN"):
+        super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
 
 class PermissionDenied(BaseCustomError):
     def __init__(self,  detail: str= "Permission denied for the user", error_code: str= "PERMISSION_DENIED"):
+        super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
+
+class PresignedUrlfail(BaseCustomError):
+    def __init__(self,  detail: str= "Presign Url Failed", error_code: str= "URl_FAILED"):
         super().__init__(detail=detail, status_code=status.HTTP_400_BAD_REQUEST, error_code=error_code)
