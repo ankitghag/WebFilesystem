@@ -77,6 +77,7 @@ docker build -t webfilesystem-app .
 
 Run the container using your .env file:
 docker run --env-file .env -p 8000:8000 webfilesystem-app
+docker run --env-file .env webfilesystem-app python -m app.worker.file_worker
 
 The API will be available at:
 http://localhost:8000
