@@ -115,12 +115,6 @@ After starting the API, open a separate terminal, activate the virtual environme
 python -m app.worker.file_worker
 ```
 
-or
-
-```bash
-docker run --env-file .env webfilesystem-app python -m app.worker.file_worker
-```
-
 Keep this worker running while using file-upload functionality. It reads upload tasks from the Redis queue and updates the file-processing status.
 
 ## With Docker
@@ -135,6 +129,12 @@ Run the container using your `.env` file:
 
 ```bash
 docker run --env-file .env -p 8000:8000 webfilesystem-app
+```
+
+### Run the Background Worker
+
+```bash
+docker run --env-file .env webfilesystem-app python -m app.worker.file_worker
 ```
 
 The API will be available at:
