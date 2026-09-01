@@ -11,8 +11,3 @@ redis = Redis.from_url(
     url,
     decode_responses=True
 )
-
-# redis.set("test:name", "Ankit")
-
-# # Read value
-# value = redis.get("test:name")
