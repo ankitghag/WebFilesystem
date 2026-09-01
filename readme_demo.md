@@ -52,25 +52,50 @@ Windows:
 Copy-Item .env_demo .env
 macOS/Linux:
 cp .env_demo .env
-Update .env with your PostgreSQL, Redis, and S3-compatible storage credentials:
-API_V1_STR=/api/v1
-SECRET_KEY=replace-with-a-secure-random-value
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-REFRESH_TOKEN_EXPIRE_MINUTES=10080
-ALGORITHM=HS256
-JWT_AUDIENCE=*
-JWT_ISSUER=http://localhost:8000
 
-USERDATABASE_URL=postgresql+asyncpg://USER:PASSWORD@HOST:5432/DATABASE
-redis_url=redis://HOST:6379/0
-
-aws_access_key_id=YOUR_ACCESS_KEY
-aws_secret_key=YOUR_SECRET_KEY
-s3api=https://YOUR-S3-COMPATIBLE-ENDPOINT
 5. Set up the database
-Create the PostgreSQL database and the filesys schema with the required tables (users, fs_node, groups, user_groups, and refresh_tokens).
-The repository currently does not include migrations or a database initialization script, so this schema must be created before starting the application.
+Create a PostgreSQL database and configure USERDATABASE_URL in .env.
+Create the filesys schema and required tables using the SQLAlchemy models defined in:
+app/models/app_model.py
+Database migrations and initialization scripts are not included.
 
 6. Start the application
 python main.py
 The API will be available at http://127.0.0.1:8000, with interactive documentation at http://127.0.0.1:8000/docs.
+
+7.Run the Background Worker
+The application uses a Redis-based background worker to process file-upload tasks.
+After starting the API, open a separate terminal, activate the virtual environment, and run:
+python -m app.worker.file_worker
+Keep this worker running while using file-upload functionality. It reads upload tasks from the Redis queue and updates the file-processing status.
+
+
+With Docker
+
+Build the Docker image:
+docker build -t webfilesystem-app .
+
+Run the container using your .env file:
+docker run --env-file .env -p 8000:8000 webfilesystem-app
+
+The API will be available at:
+http://localhost:8000
+Interactive API documentation:
+http://localhost:8000/docs
+
+
+Authentication
+Protected endpoints require a JWT access token. First, create an account using the sign-up endpoint, then sign in to receive an access token.
+Include the token in requests using the Authorization header:
+Authorization: Bearer <access_token>
+The API also sets a refresh token as an HTTP-only cookie during sign-in. When the access token expires, call the refresh endpoint to obtain a new access token.
+
+
+Database Setup
+
+The application uses PostgreSQL for users, filesystem metadata, groups, and refresh tokens.
+1. Create a PostgreSQL database.
+2. Add the connection URL to .env:
+USERDATABASE_URL=postgresql+asyncpg://USER:PASSWORD@HOST:5432/DATABASE
+3. Create the `filesys` schema and tables based on the models in `app/models/app_model.py`.
+Migration scripts are not included, so the schema must be created manually.

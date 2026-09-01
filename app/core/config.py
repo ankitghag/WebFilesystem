@@ -15,5 +15,7 @@ class csetting():
     AWS_SECRET_KEY= os.getenv("aws_secret_key", None)
     AWS_URL= os.getenv("s3api", None)
     REDIS_URL= os.getenv("redis_url", None)
+    BUCKET=os.getenv("obj_bucket", None)
+
 
 setting= csetting()
