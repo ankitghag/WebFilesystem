@@ -227,5 +227,5 @@ Add the following inbound rules to the security group attached to both EC2 and E
 
 
 ### Connect ec2 to elastic cache
-sudo apt install -y redis-tools
-redis-cli -c -h redis_endpoint -p 6379 --tls
+* sudo apt install -y redis-tools
+* redis-cli -c -h redis_endpoint -p 6379 --tls
