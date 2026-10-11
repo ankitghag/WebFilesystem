@@ -11,6 +11,9 @@ def get_r2_client():
         aws_secret_access_key=setting.AWS_SECRET_KEY,
         region_name="auto", # Required by SDK but not used by R2
         config=Config(
-            signature_version="s3v4")
+            signature_version="s3v4",
+             s3={
+        "payload_signing_enabled": False
+    })
     )
     return s3

@@ -113,6 +113,7 @@ class FSNodeService:
         # On parent node chk if there is write permission .
         # return self.node_repo.create_dir(dirparam)
         fid= fsutilis.generate_id() 
+        purl= ""
         print(f"FID : {fid}")
         repoparam= dict(dirparam)
         repoparam["id"]= fid
@@ -265,8 +266,3 @@ class FSNodeService:
 
         print(f"PARAM : {param}")
         return {"message": "File queued"}
-
-
-
-
-    

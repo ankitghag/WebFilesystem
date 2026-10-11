@@ -102,7 +102,6 @@ async def refresh_token(request: Request, response: Response, payload= Depends(v
         httponly=True,  
         samesite="Lax"   # or "Strict"/"None"
     )
-    print(f"REFRESHi2 {tokres}")
     # return {"access_token": new_access_token}
     rtres= create_response(data= new_access_token, message="Refresh TOKEN SUCCESS", status_code=status.HTTP_200_OK)
     rtres.set_cookie(

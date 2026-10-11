@@ -1,0 +1,17 @@
+| Priority | Feature | Main cases to test |
+|---|---|---|
+| P0 | User registration | Valid signup; password rules; invalid email/role; duplicate email; password is hashed; expected `201` response |
+| P0 | Sign in | Correct credentials return access token and HTTP-only refresh cookie; unknown email; wrong password; no internal error on invalid credentials |
+| P0 | JWT authentication | Valid token permits protected routes; absent, expired, malformed, wrong issuer/audience tokens receive `401`; refresh token endpoint rejects absent or revoked cookies |
+| P0 | Refresh token rotation | Refresh returns new access and refresh tokens; old stored refresh token is revoked; replaying an old refresh token fails |
+| P0 | Folder creation | Authorized user can create inside a directory; invalid parent; file as parent; no create permission; duplicate name under the same parent |
+| P0 | File upload lifecycle | Creating file metadata returns a presigned upload URL; upload completion marks it uploaded and queues a Redis event; presigned URL failure leaves no misleading success |
+| P0 | File retrieval | Owner or permitted group member can read; unauthorized user is denied; storage lookup uses the requested node ID |
+| P0 | Delete behavior | Empty file/folder deletion; nonempty normal folder deletion is denied; recursive deletion marks the subtree deleted; missing node returns the expected error |
+| P0 | Permissions | Owner/group/other modes for read, create, delete, move; execute permission required on every parent directory; only owner can change mode |
+| P0 | Move behavior | Move to valid permitted directory; destination is not a directory; denied without write+execute; missing source; verify path metadata stays correct |
+| P1 | Groups | Admin can create a group and assign users; non-admin is denied; missing creator/user; duplicate group name; group membership enables group permissions |
+| P1 | Worker and queue | Completion publishes the required event fields; worker transitions `UPLOADED → PROCESSING → COMPLETED`; failed processing becomes `FAILED`; successful messages are acknowledged |
+| P1 | Object storage adapter | Presigned URL request parameters; upload key/content type; download content; storage exceptions propagate as safe API errors |
+| P1 | Database constraints | Unique username/email; unique node name per parent; soft-deleted nodes’ visibility; transaction rollback when a later operation fails |
+| P2 | Input and response contract | Pydantic validation for every body/form input; multipart upload form; response envelope shape; custom exception responses stay consistent |
